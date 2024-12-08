@@ -9,7 +9,7 @@ interface BalanceResponse {
 
 const App: React.FC = () => {
   const [balance, setBalance] = useState<number>(0);
-  const [goal, setGoal] = useState<number>(10000); // Set the goal to 10,000 NIS
+  const [goal, setGoal] = useState<number>(10000); // Example goal: 10,000 NIS
   const [error, setError] = useState<string | null>(null);
 
   const fetchBalance = async () => {
@@ -35,12 +35,14 @@ const App: React.FC = () => {
   }, []);
 
   // Generate ticks dynamically based on predefined intervals
-  const interval = 1000; // Set tick interval (e.g., 1000 NIS)
-  const tickCount = Math.floor(goal / interval); // Total number of ticks
-  const ticks = Array.from({ length: tickCount }, (_, i) => ({
-    value: (interval * (i + 1)) / goal, // Normalized position
+  const interval = 1000; // Tick interval: every 1000 NIS
+  const ticks = Array.from({ length: Math.floor(goal / interval) }, (_, i) => ({
+    value: (interval * (i + 1)) / goal, // Normalized position (0 to 1)
     label: `${interval * (i + 1)} ₪`,
   }));
+
+  // Debugging: Log the ticks array
+  console.log('Generated ticks:', ticks);
 
   return (
     <Box
@@ -88,26 +90,31 @@ const App: React.FC = () => {
             key={index}
             sx={{
               position: 'absolute',
-              left: '100%',
-              bottom: `${tick.value * 100}%`,
+              left: '100%', // Place outside the bar
+              bottom: `${tick.value * 100}%`, // Position based on value
               transform: 'translateX(10px)',
               display: 'flex',
               alignItems: 'center',
+              zIndex: 2, // Ensure visibility
             }}
           >
             {/* Tick line */}
             <Box
               sx={{
                 width: '10px',
-                height: '1px',
-                backgroundColor: '#333',
+                height: '2px',
+                backgroundColor: '#333', // Dark gray tick color
                 marginRight: '5px',
               }}
             />
             {/* Tick label */}
             <Typography
               variant="caption"
-              sx={{ color: '#333', fontSize: '10px', whiteSpace: 'nowrap' }}
+              sx={{
+                color: '#333',
+                fontSize: '10px',
+                whiteSpace: 'nowrap',
+              }}
             >
               {tick.label}
             </Typography>
