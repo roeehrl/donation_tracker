@@ -1,0 +1,27 @@
+
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./donation-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - donation-network
+
+  backend:
+    build:
+      context: ./server
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./server/.env
+    networks:
+      - donation-network
+
+networks:
+  donation-network:
+    driver: bridge
